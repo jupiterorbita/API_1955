@@ -49,8 +49,8 @@ app.get("/", function(req, res) {
 });
 
 app.get("/new/:name", function(req, res) {
-//   console.log("POST DATA", req.body);
-  var new_name = new Person({name: req.params.name});
+  console.log("\nreq.params.name =>", req.params.name);
+  var new_name = new Person({ name: req.params.name });
   new_name.save(function(err) {
     if (err) {
       console.log("something went wrong inserting");
@@ -60,7 +60,29 @@ app.get("/new/:name", function(req, res) {
       });
     } else {
       console.log("added person!");
-      res.json({message: "success"});
+      res.json({ message: "success" });
+    }
+  });
+});
+
+app.get("/remove/:name/", function(req, res) {
+  Person.remove({ name: req.params.name }, function(err) {
+    if (err) {
+      console.log("Returned error", err);
+      res.json({ message: "Error", error: err });
+    } else {
+      res.json({ message: "Removed" });
+    }
+  });
+});
+
+app.get("/:name", function(req, res) {
+  Person.find({ name: req.params.name }, function(err, per) {
+    if (err) {
+      console.log("Returned error", err);
+      res.json({ message: "Error", error: err });
+    } else {
+      res.json({ message: "Success", data: per });
     }
   });
 });
